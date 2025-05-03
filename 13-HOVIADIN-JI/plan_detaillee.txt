@@ -1,0 +1,95 @@
+cpu_simulator/
+├── include/                  # Fichiers d'en-tête
+│   ├── hashmap.h             # Exercice 1
+│   ├── memory_handler.h      # Exercice 2
+│   ├── parser.h              # Exercice 3
+│   ├── cpu.h                 # Exercices 4, 5, 6, 7, 8
+│   └── addressing.h          # Exercice 5
+├── src/                      # Fichiers sources
+│   ├── hashmap.c             # Exercice 1 (1.1 à 1.6)
+│   ├── memory_handler.c      # Exercice 2 (2.1 à 2.4)
+│   ├── parser.c              # Exercice 3 (3.1 à 3.5)
+│   ├── cpu.c                 # Exercices 4, 6, 7, 8 (initialisation, destruction, allocation de segments)
+│   ├── addressing.c          # Exercice 5 (5.1 à 5.8) + 8.1, 8.2
+│   ├── instructions.c        # Exercice 6 (6.4 à 6.6), 7.3, 8.7
+│   └── main.c                # Programme principal
+├── tests/                    # Tests unitaires
+│   ├── test_hashmap.c
+│   ├── test_memory.c
+│   ├── test_parser.c
+│   ├── test_addressing.c
+│   └── test_cpu.c
+├── examples/                 # Programmes d'exemple en pseudo-assembleur
+│   ├── simple.asm
+│   ├── factorial.asm
+│   └── fibonacci.asm
+├── Makefile                  # Pour compiler le projet
+└── README.md                 # Documentation du projet
+
+
+Contenu détaillé des fichiers principaux
+
+hashmap.c (Exercice 1)
+
+1.1: unsigned long simple_hash(const char *str)
+1.2: HashMap *hashmap_create()
+1.3: int hashmap_insert(HashMap *map, const char *key, void *value)
+1.4: void *hashmap_get(HashMap *map, const char *key)
+1.5: int hashmap_remove(HashMap *map, const char *key)
+1.6: void hashmap_destroy(HashMap *map)
+
+
+memory_handler.c (Exercice 2)
+
+2.1: MemoryHandler *memory_init(int size)
+2.2: find_free_segment(MemoryHandler* handler, int start, int size, Segment** prev)
+2.3: int create_segment(MemoryHandler *handler, const char *name, int start, int size)
+2.4: int remove_segment(MemoryHandler *handler, const char *name)
+8.3: int find_free_address_strategy(MemoryHandler *handler, int size, int strategy)
+void memory_destroy(MemoryHandler *handler)
+
+
+parser.c (Exercice 3)
+
+3.1: Instruction *parse_data_instruction(const char *line, HashMap *memory_locations)
+3.2: Instruction *parse_code_instruction(const char *line, HashMap *labels, int code_count)
+3.3: ParserResult *parse(const char *filename)
+3.5: void free_parser_result(ParserResult *result)
+6.1: int resolve_constants(ParserResult *result)
+char *trim(char *str)
+int search_and_replace(char **str, HashMap *values)
+void remove_comments(char *line);
+
+cpu.c (Exercices 4, 6, 7, 8)
+
+4.1, 5.1, 6.2, 7.1, 8.4: CPU *cpu_init(int memory_size)
+4.2: void cpu_destroy(CPU *cpu)
+4.3: void* store(MemoryHandler *handler, const char *segment_name, int pos, void *data)
+4.4: void* load(MemoryHandler *handler, const char *segment_name, int pos)
+4.5: void allocate_variables(CPU *cpu, Instruction** data_instructions, int data_count)
+4.6: void print_data_segment(CPU *cpu)
+6.3: void allocate_code_segment(CPU *cpu, Instruction **code_instructions, int code_count)
+6.7: int run_program(CPU *cpu)
+7.2: int push_value(CPU *cpu, int value) et int pop_value(CPU *cpu, int *dest)
+8.5: int alloc_es_segment(CPU *cpu)
+8.6: int free_es_segment(CPU *cpu)
+
+
+addressing.c (Exercice 5 + 8.1, 8.2)
+
+5.2: void *immediate_addressing(CPU *cpu, const char *operand)
+5.3: void *register_addressing(CPU *cpu, const char *operand)
+5.4: void *memory_direct_addressing(CPU *cpu, const char *operand)
+5.5: void *register_indirect_addressing(CPU *cpu, const char *operand)
+5.8: void *resolve_addressing(CPU *cpu, const char *operand)
+8.1: void* segment_override_addressing(CPU* cpu, const char* operand)
+int is_number(const char *s);
+int matches(const char *pattern, const char *string);
+
+
+instructions.c (Exercice 6.4 à 6.6, 7.3, 8.7)
+
+5.6: void handle_MOV(CPU* cpu, void* src, void* dest)
+6.4: int handle_instruction(CPU *cpu, Instruction *instr, void *src, void *dest)
+6.5: int execute_instruction(CPU *cpu, Instruction *instr)
+6.6: Instruction* fetch_next_instruction(CPU *cpu)
